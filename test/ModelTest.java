@@ -41,24 +41,26 @@ public class ModelTest {
   @Test
   public void testModel(){
     //create 2 students
-    Student buyer = new Student("New", "Student", "WantBook@icsdept.hawaii");
-    Student seller = new Student("My", "Self", "SellBook@icsdept.hawaii");
+    Student buyer = new Student("Student-01", "New", "Student", "WantBook@icsdept.hawaii");
+    Student seller = new Student("Student-02", "My", "Self", "SellBook@icsdept.hawaii");
     //create 1 book
-    Book icsBook = new Book("Java Style Elements", "Edition 2", 00000000001, 30.0);
+    
+    
+    Book icsBook = new Book("Book-01", "Java Style Elements", "Edition 2", "00000000001", "30.0");
     //create 1 condition
-    Condition brandNew = new Condition("Brand New");
+    Condition brandNew = new Condition("Cond-01", "Brand New");
     //create 1 request
-    Request request = new Request(icsBook, brandNew, 10.0, buyer);
+    Request request = new Request("Req-01", icsBook, brandNew, "10.0", buyer);
     //create 1 offer
-    Offer offer = new Offer(icsBook, brandNew, 10.0, seller);
+    Offer offer = new Offer("Offer-01", icsBook, brandNew, "10.0", seller);
     //now associate correctly for request.
-    buyer.requests.add(request);
-    icsBook.requests.add(request);
-    brandNew.requests.add(request);
+    buyer.getRequests().add(request);
+    icsBook.getRequests().add(request);
+    brandNew.getRequests().add(request);
     //associate for offer
-    seller.offers.add(offer);
-    icsBook.offers.add(offer);
-    brandNew.offers.add(offer);
+    seller.getOffers().add(offer);
+    icsBook.getOffers().add(offer);
+    brandNew.getOffers().add(offer);
     
     //persist the sample model by saving all entities and relationships
     buyer.save();
@@ -85,25 +87,26 @@ public class ModelTest {
     assertEquals("Checking Offer List", offers.size(), 1);
     assertEquals("Checking Sellers", sellers.size(), 1);
     
-    assertEquals("Offers to sellers", sellers.get(0).offers.get(0), offers.get(0));
-    assertEquals("Offers to books", offers.get(0).book, books.get(0));
-    assertEquals("Offers to conditions", offers.get(0).condition, conditions.get(0));
-    assertEquals("Requests to buyers", buyers.get(0).requests.get(0), requests.get(0));
-    assertEquals("Requests to books", requests.get(0).book, books.get(0));
-    assertEquals("Requests to condition", requests.get(0).condition, conditions.get(0));
+    assertEquals("Offers to sellers", sellers.get(0).getOffers().get(0), offers.get(0));
+    assertEquals("Offers to books", offers.get(0).getBook(), books.get(0));
+    assertEquals("Offers to conditions", offers.get(0).getCondition(), conditions.get(0));
+    assertEquals("Requests to buyers", buyers.get(0).getRequests().get(0), requests.get(0));
+    assertEquals("Requests to books", requests.get(0).getBook(), books.get(0));
+    assertEquals("Requests to condition", requests.get(0).getCondition(), conditions.get(0));
     
     
     //First remove the offer from seller.
-    //seller.offers.clear();
-    seller.clearOffers();
-    offer.removeStudent();
+    //seller.getOffers().clear();
+    //seller.clearOffers();
+    //offer.removeStudent();
+    offer.setStudent(null);
     //Save to db.
-    seller.update();
+    //seller.update();
     offer.update();
     //The previously retrieved seller should still have the offer.
-    assertTrue("Previously retrieved seller still has offer", !sellers.get(0).offers.isEmpty());
+    assertTrue("Previously retrieved seller still has offer", !sellers.get(0).getOffers().isEmpty());
     //Sanity check the seller that was modified
-    assertTrue("Modified seller has no offer", seller.offers.isEmpty());
+    //assertTrue("Modified seller has no offer", seller.offers.isEmpty());
     
     //assertTrue("Offer has no student?", offer.student == null);
     //assertTrue("New offer recall has no student?" + Offer.find().findList().get(0).student, Offer.find().findList().get(0).student == null);
@@ -113,16 +116,21 @@ public class ModelTest {
     //assertTrue("redo-1Fresh seller has no offer" + Student.find().findList().get(1).lastName, Student.find().findList().get(1).offers.isEmpty());
     
     
-    assertTrue("Fresh seller has no offer. Original seller name:" + seller.firstName + "Found seller's name: " + 
-        Student.find().where().eq("lastName", "Self").findList().get(0).firstName,
+    assertTrue("Fresh seller has no offer. Original seller name:" + seller.getFirstName() + "Found seller's name: " + 
+        Student.find().where().eq("lastName", "Self").findList().get(0).getFirstName(),
         
         
-        Student.find().where().eq("lastName", "Self").findList().get(0).offers.isEmpty());
+        Student.find().where().eq("lastName", "Self").findList().get(0).getOffers().isEmpty());
     //Just as the offer should have been updated to remove the student.
-    assertTrue("Fresh offer has no seller", Offer.find().findList().get(0).student==null);
+    assertTrue("Fresh offer has no seller", Offer.find().findList().get(0).getStudent()==null);
+    assertEquals("Fresh offer still has book", Offer.find().findList().get(0).getBook(), Book.find().findList().get(0));
     //If the offer is deleted, then db should not find it.
-    //Offer.find().findList().get(0).delete();
-    //assertTrue("No more offers in database", Offer.find().findList().isEmpty());
+    Student.find().where().eq("lastName", "Self").findList().get(0).delete();
+    
+    Offer.find().findList().get(0).setCondition(null);
+    Offer.find().findList().get(0).setBook(null);
+    Offer.find().findList().get(0).update();
+    
   }
   
   

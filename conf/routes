@@ -5,5 +5,38 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+#Student
+GET		/students					controllers.ControlStudent.index()
+GET		/students/:studentId		controllers.ControlStudent.details(studentId: String)
+POST	/students					controllers.ControlStudent.newStudent()
+DELETE	/students/:studentId		controllers.ControlStudent.delete(studentId: String)
+
+#Book
+GET		/books					controllers.ControlBook.index()
+GET		/books/:bookId			controllers.ControlBook.details(bookId: String)
+POST	/books					controllers.ControlBook.newBook()
+DELETE	/books/:bookId			controllers.ControlBook.delete(bookId: String)
+
+#Condition
+GET		/conditions					controllers.ControlCondition.index()
+GET		/conditions/:conditionId	controllers.ControlCondition.details(conditionId: String)
+POST	/conditions					controllers.ControlCondition.newCondition()
+DELETE	/conditions/:conditionId	controllers.ControlCondition.delete(conditionId: String)
+
+#Offer
+GET		/offers						controllers.ControlOffer.index()
+GET		/offers/:offerId			controllers.ControlOffer.details(offerId: String)
+POST	/offers						controllers.ControlOffer.newOffer()
+DELETE	/offers/:offerId			controllers.ControlOffer.delete(offerId: String)
+
+#request
+GET		/requests					controllers.ControlRequest.index()
+GET		/requests/:requestId		controllers.ControlRequest.details(requestId: String)
+POST	/requests					controllers.ControlRequest.newRequest()
+DELETE	/requests/:requestId		controllers.ControlRequest.delete(requestId: String)
+
+
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

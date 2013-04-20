@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
 /**
@@ -21,23 +22,27 @@ public class Condition extends Model {
   private static final long serialVersionUID = 3265159995594874517L;
   /** Primary key. */
   @Id
-  public long id;
+  private Long primaryKey;
+  @Required
+  private String conditionId;
   /** A short description of the condition. */
-  public String description;
+  @Required
+  private String description;
 
   /** All requests with this condition. */
   @OneToMany(mappedBy = "condition", cascade = CascadeType.ALL)
-  public List<Request> requests = new ArrayList<Request>();
+  private List<Request> requests = new ArrayList<Request>();
   /** All offers with this condition. */
   @OneToMany(mappedBy = "condition", cascade = CascadeType.ALL)
-  public List<Offer> offers = new ArrayList<Offer>();
+  private List<Offer> offers = new ArrayList<Offer>();
 
   /**
    * Constructor for condition.
    * 
    * @param description of the condition.
    */
-  public Condition(String description) {
+  public Condition(String conditionId, String description) {
+    this.conditionId = conditionId;
     this.description = description;
   }
 
@@ -49,5 +54,81 @@ public class Condition extends Model {
   public static Finder<Long, Condition> find() {
     return new Finder<Long, Condition>(Long.class, Condition.class);
   }
+  
+  public String toString(){
+    return String.format("[Condition %s %s]", conditionId, description);
+  }
+
+  /**
+   * @return the primaryKey
+   */
+  public Long getPrimaryKey() {
+    return primaryKey;
+  }
+
+  /**
+   * @param primaryKey the primaryKey to set
+   */
+  public void setPrimaryKey(Long primaryKey) {
+    this.primaryKey = primaryKey;
+  }
+
+  /**
+   * @return the conditionId
+   */
+  public String getConditionId() {
+    return conditionId;
+  }
+
+  /**
+   * @param conditionId the conditionId to set
+   */
+  public void setConditionId(String conditionId) {
+    this.conditionId = conditionId;
+  }
+
+  /**
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * @param description the description to set
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  /**
+   * @return the requests
+   */
+  public List<Request> getRequests() {
+    return requests;
+  }
+
+  /**
+   * @param requests the requests to set
+   */
+  public void setRequests(List<Request> requests) {
+    this.requests = requests;
+  }
+
+  /**
+   * @return the offers
+   */
+  public List<Offer> getOffers() {
+    return offers;
+  }
+
+  /**
+   * @param offers the offers to set
+   */
+  public void setOffers(List<Offer> offers) {
+    this.offers = offers;
+  }
+  
+  
 
 }
